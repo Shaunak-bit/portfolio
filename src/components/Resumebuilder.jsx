@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './resumebuilder.module.css';
 import { FaGithub, FaLinkedin, FaTwitter, FaEnvelope } from 'react-icons/fa';
+import homeStyles from '../pages/home.module.css';
 
 export default function ResumeBuilder() {
   const [activeTab, setActiveTab] = useState('personal');
@@ -123,25 +124,43 @@ export default function ResumeBuilder() {
     }));
   };
 
+  const deleteExperience = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      experiences: prev.experiences.filter((_, i) => i !== index)
+    }));
+  };
+
+  const deleteEducation = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      education: prev.education.filter((_, i) => i !== index)
+    }));
+  };
+
+  const deleteSkill = (index) => {
+    setFormData(prev => ({
+      ...prev,
+      skills: prev.skills.filter((_, i) => i !== index)
+    }));
+  };
+
   return (
     <div className={styles.builderPage}>
-      <header className={styles.header}>
-        <nav className={styles.nav}>
-          <div className={styles.navLeft}>
-            <Link to="/" className={styles.logo}>
-              <span className={styles.logoIcon}>P</span>
-              Portfolio
-            </Link>
-          </div>
-          <div className={styles.navRight}>
-            <Link to="/">Home</Link>
-            <Link to="/projects">Projects</Link>
-            <Link to="/about">About</Link>
-            <Link to="/contact">Contact</Link>
-            <Link to="/resume-builder" className={styles.active}>Resume Builder</Link>
-            <Link to="/chatbot">Chatbot</Link>
-          </div>
-        </nav>
+      <header className={homeStyles['portfolio-header']}>
+        <div className={homeStyles.container}>
+          <nav>
+            <div className={homeStyles.logo}>Portfolio</div>
+            <ul className={homeStyles['nav-links']}>
+              <li><Link to="/">Home</Link></li>
+              <li><Link to="/projects">Projects</Link></li>
+              <li><Link to="/about">About</Link></li>
+              <li><Link to="/contact">Contact</Link></li>
+              <li><Link to="/resume-builder" className={homeStyles.active}>Resume Builder</Link></li>
+              <li><Link to="/chatbot">Chatbot</Link></li>
+            </ul>
+          </nav>
+        </div>
       </header>
 
       <main className={styles.main}>
@@ -154,7 +173,7 @@ export default function ResumeBuilder() {
               <h2>Resume Editor</h2>
               <div className={styles.editorActions}>
                 <button className={styles.previewBtn}>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg    " viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                     <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
                   </svg>
@@ -172,25 +191,25 @@ export default function ResumeBuilder() {
 
             <div className={styles.editorTabs}>
               <button 
-                className={activeTab === 'personal' ? styles.activeTab : ''}
+                className={`${styles.tabButton} ${activeTab === 'personal' ? styles.activeTab : ''}`}
                 onClick={() => setActiveTab('personal')}
               >
                 Personal Info
               </button>
               <button 
-                className={activeTab === 'experience' ? styles.activeTab : ''}
+                className={`${styles.tabButton} ${activeTab === 'experience' ? styles.activeTab : ''}`}
                 onClick={() => setActiveTab('experience')}
               >
                 Experience
               </button>
               <button 
-                className={activeTab === 'education' ? styles.activeTab : ''}
+                className={`${styles.tabButton} ${activeTab === 'education' ? styles.activeTab : ''}`}
                 onClick={() => setActiveTab('education')}
               >
                 Education
               </button>
               <button
-                className={activeTab === 'skills' ? styles.activeTab : ''}
+                className={`${styles.tabButton} ${activeTab === 'skills' ? styles.activeTab : ''}`}
                 onClick={() => setActiveTab('skills')}
               >
                 Skills
@@ -275,10 +294,22 @@ export default function ResumeBuilder() {
                 </div>
               </div>
             ) : activeTab === 'experience' ? (
-              <div className={styles.editorForm}>
+              <div className={"experienceFormSection"}>
                 {formData.experiences.map((exp, index) => (
+                  // In the experience section
                   <div key={index} className={styles.experienceItem}>
-                    <h3>Experience #{index + 1}</h3>
+                    <div className={styles.itemHeader}>
+                      <h3>Experience #{index + 1}</h3>
+                      <button 
+                        className={styles.deleteBtn} 
+                        onClick={() => deleteExperience(index)}
+                        type="button"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
                     <div className={styles.formGroup}>
                       <label>Job Title</label>
                       <input
@@ -350,8 +381,20 @@ export default function ResumeBuilder() {
             ) : activeTab === 'education' ? (
               <div className={styles.editorForm}>
                 {formData.education.map((edu, index) => (
+                  // In the education section
                   <div key={index} className={styles.educationItem}>
-                    <h3>Education #{index + 1}</h3>
+                    <div className={styles.itemHeader}>
+                      <h3>Education #{index + 1}</h3>
+                      <button 
+                        className={styles.deleteBtn} 
+                        onClick={() => deleteEducation(index)}
+                        type="button"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
                     <div className={styles.formGroup}>
                       <label>Degree</label>
                       <input
@@ -423,8 +466,20 @@ export default function ResumeBuilder() {
             ) : activeTab === 'skills' ? (
               <div className={styles.editorForm}>
                 {formData.skills.map((skill, index) => (
-                  <div key={index} className={styles.skillItem}>
-                    <div className={styles.formGroup}>
+                  <div key={index} className={styles.skillItem} style={{ backgroundColor: '#1f2937', color: '#fff' }}>
+                    <div className={styles.itemHeader} style={{ color: '#fff' }}>
+                      <h3>Skill #{index + 1}</h3>
+                      <button 
+                        className={styles.deleteBtn} 
+                        onClick={() => deleteSkill(index)}
+                        type="button"
+                      >
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                          <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
+                    <div className={styles.formGroup} style={{ color: '#fff' }}>
                       <label>Skill Name</label>
                       <input
                         type="text"
@@ -432,9 +487,10 @@ export default function ResumeBuilder() {
                         value={skill.skillName}
                         onChange={(e) => handleSkillChange(index, e)}
                         placeholder="JavaScript"
+                        style={{ backgroundColor: '#1f2937', color: '#fff', border: '1px solid #374151' }}
                       />
                     </div>
-                    <div className={styles.formGroup}>
+                    <div className={styles.formGroup} style={{ color: '#fff' }}>
                       <label>Proficiency</label>
                       <input
                         type="range"
@@ -562,9 +618,9 @@ export default function ResumeBuilder() {
             </div>
             <p>Showcasing my creative work, skills, and professional journey through an interactive portfolio experience.</p>
             <div className={styles.socialLinks}>
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer"><FaGithub /></a>
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer"><FaLinkedin /></a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer"><FaTwitter /></a>
+              <a href="https://github.com    " target="_blank" rel="noopener noreferrer"><FaGithub /></a>
+              <a href="https://linkedin.com    " target="_blank" rel="noopener noreferrer"><FaLinkedin /></a>
+              <a href="https://twitter.com    " target="_blank" rel="noopener noreferrer"><FaTwitter /></a>
               <a href="mailto:contact@example.com"><FaEnvelope /></a>
             </div>
           </div>
